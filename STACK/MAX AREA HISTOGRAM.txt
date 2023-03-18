@@ -1,0 +1,56 @@
+ long long getMaxArea(long long a[], int n)
+    {
+        vector<long long>left;
+        stack<pair<long,int>>s;
+        for(int i=0; i<n; i++)
+        {
+            if(s.size()==0)
+            left.push_back(-1);
+            else if(s.size()>0 && s.top().first<a[i])
+            left.push_back(s.top().second);
+            else if(s.size()>0 && s.top().first>=a[i])
+            {
+                while(s.size()>0 && s.top().first>=a[i])
+                s.pop();
+                
+                if(s.size()==0)
+                left.push_back(-1);
+                else 
+                left.push_back(s.top().second);
+            }
+            s.push({a[i],i});
+        }
+      vector<long long>right;
+         while(!s.empty())
+         s.pop();
+         
+         
+        for(int i=n-1; i>=0; i--)
+        {
+            if(s.size()==0)
+            right.push_back(n);
+            else if(s.size()>0 && s.top().first<a[i])
+            right.push_back(s.top().second);
+            else if(s.size()>0 && s.top().first>=a[i])
+            {
+                while(s.size()>0 && s.top().first>=a[i])
+                s.pop();
+                if(s.size()==0)
+                right.push_back(n);
+                else 
+                right.push_back(s.top().second);
+            }
+            s.push({a[i],i});
+        }
+        reverse(right.begin(),right.end());
+        vector<long long>width;
+        for(int i=0; i<n; i++)
+        width[i]=right[i]-left[i]-1;
+        
+        vector<long long>area;
+        for(int i=0; i<n; i++)
+        area[i]=a[i]*width[i];
+        
+        sort(area.begin(),area.end());
+        return area[n-1];
+}
